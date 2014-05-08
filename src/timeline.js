@@ -382,6 +382,9 @@
          .enter()
          .append("rect")
          .attr('class', 'block')
+         .attr('data-id', function(d){
+            return d.id;
+         })
          .attr('x', function(d, i){
             if (/^loadPage/.test(d.label) && d.end > self._pageLoad){
                self._pageLoad = d.end;
@@ -478,12 +481,24 @@
          captions = d3.select(this._leftCanvas[0]).selectAll('.block-caption')
             .data(this.data);
 
+      function toggleHover(id, action){
+         var elem = self._canvas[0].querySelector('[data-id="'+ id +'"]');
+
+         elem.classList[action ? 'add' : 'remove']('hover');
+      }
+
       captions
          .enter()
          .append('text')
          .attr('class', 'block-caption')
          .attr('x', function(d, i){
             return 20 + d.level*10;
+         })
+         .on('mouseover', function(d){
+            toggleHover(d.id, true);
+         })
+         .on('mouseout', function(d){
+            toggleHover(d.id, false);
          });
 
       captions
