@@ -59,7 +59,7 @@
 
 }
 .timeline__canvas .block-duration{
-   fill: #FFF;
+   fill: #000;
    font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
    font-size: 10px;
    cursor: pointer;

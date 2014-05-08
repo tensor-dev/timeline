@@ -232,10 +232,44 @@
 
       this._drawBlocks();
 
-      //this._drawCaptions();
+      this._drawCaptions();
       this._drawTitle();
       this._drawCircles();
 
+   };
+
+   Graph.prototype._drawCaptions = function(){
+      var
+         y = 0,
+         self = this,
+         captions = d3.select(this._canvas[0]).selectAll('.block-tooltip')
+            .data(this.data);
+
+      //enter
+      captions
+         .enter()
+         .append('text')
+         .attr('class', 'block-duration')
+         .attr('x', function(d, i){
+            return d.start/10 + 2;
+         })
+         .on('mouseover', function(d){
+            self.showTip(d)
+         })
+         .on('mouseout', function(d){
+            self.closeTip(d);
+         });
+
+      //update
+      captions
+         .attr('y', function(d, i){
+            var res = y;
+            y += self._blockIsVisible(d) ? BLOCK_HEIGHT + V_MARGIN : 0;
+            return res + 11;
+         })
+         .text(function(d){
+            return self._blockIsVisible(d) ? d.end- d.start + 'ms' : '';
+         });
    };
 
    /**
