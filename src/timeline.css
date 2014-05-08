@@ -1,0 +1,108 @@
+.timeline__container{
+   position: relative;
+   overflow: hidden;
+}
+.timeline__wrapper{
+   position: relative;
+   overflow: hidden;
+   margin-left: 300px;
+   height: 100%;
+   cursor: move;
+}
+.timeline__btn-pressed{
+   cursor: move;
+}
+
+.timeline__leftside{
+   display: block;
+   width: 300px;
+   position: relative;
+   height: 100%;
+   overflow-y: auto;
+   overflow-x: hidden;
+   float: left;
+}
+
+.timeline__axe{
+   position: absolute;
+   display: block;
+   bottom: 0;
+}
+.timeline__lines{
+   position: absolute;
+   display: block;
+   top: 0;
+}
+
+.timeline__lines .load-page{
+   fill: #E4FFDA;
+   opacity: 0.5;
+}
+
+.timeline__axe line,
+.timeline__axe path{
+   fill: none;
+   stroke: #000;
+   shape-rendering: crispEdges;
+}
+.timeline__axe text{
+   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+   font-size: 11px;
+}
+
+.timeline__canvas{
+   position: relative;
+}
+.timeline__canvas .block{
+   fill: lightblue;
+   cursor: pointer;
+
+}
+.timeline__canvas .block-duration{
+   fill: #FFF;
+   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+   font-size: 10px;
+   cursor: pointer;
+}
+.timeline__left-canvas .block-caption{
+   fill: #000;
+   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+   font-size: 11px;
+   cursor: pointer;
+   opacity: 0.9;
+}
+.timeline__canvas .toggle-branch{
+   stroke-width: 3px;
+   stroke: lightblue;
+   cursor: pointer;
+   fill: #FFF;
+}
+.timeline__canvas .toggle-branch__closed{
+   fill: lightblue;
+   stroke: lightblue;
+}
+
+.timeline__lines{
+   stroke: #ddd;
+   shape-rendering: crispEdges;
+}
+
+.block-tooltip{
+   max-width: 400px;
+   position: absolute;
+   z-index: 1000;
+   min-width: 200px;
+   opacity: 0.8;
+   background-color: black;
+   border-radius: 3px;
+   display: none;
+   padding: 7px;
+   color: #FFFFFF;
+   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+   font-size: 11px;
+}
+.block-tooltip__str{
+   text-overflow: ellipsis;
+   overflow: hidden;
+   margin: 0 0 5px 0;
+}
