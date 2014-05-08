@@ -481,8 +481,12 @@
          captions = d3.select(this._leftCanvas[0]).selectAll('.block-caption')
             .data(this.data);
 
+      function getBlockElem(id){
+         return self._canvas[0].querySelector('[data-id="'+ id +'"]');
+      }
+
       function toggleHover(id, action){
-         var elem = self._canvas[0].querySelector('[data-id="'+ id +'"]');
+         var elem = getBlockElem(id);
 
          elem.classList[action ? 'add' : 'remove']('hover');
       }
@@ -499,6 +503,14 @@
          })
          .on('mouseout', function(d){
             toggleHover(d.id, false);
+         })
+         .on('click', function(d){
+            var
+               elem = getBlockElem(d.id),
+               scrollLeft = parseInt(elem.getAttribute('x'),10) - self._wrapper.width()/2 ;
+
+            self._wrapper.animate({'scrollLeft': scrollLeft}, 'slow')
+
          });
 
       captions
