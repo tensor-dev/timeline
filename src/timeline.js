@@ -231,9 +231,11 @@
    Graph.prototype.redraw = function(){
 
       this._drawBlocks();
-      this._drawCircles();
+
       //this._drawCaptions();
       this._drawTitle();
+      this._drawCircles();
+
    };
 
    /**
@@ -374,6 +376,7 @@
          .attr('y', function(d){
             var y = svgHeight;
             svgHeight += self._blockIsVisible(d) ? BLOCK_HEIGHT + V_MARGIN : 0;
+            d.y = y;
             return y;
          })
          .attr('height', function(d){
@@ -398,7 +401,7 @@
       var
          y = 0,
          self = this,
-         circles = d3.select(this._canvas[0]).selectAll('circle')
+         circles = d3.select(this._leftCanvas[0]).selectAll('circle')
             .data(this.data);
 
       //enter
@@ -409,7 +412,7 @@
             return self.tree[d.id].children && self.tree[d.id].children.length;
          })
          .attr('cx', function(d, i){
-            return d.start/10 - 8;
+            return 13 + d.level*10;
          })
          .on('click', function(d){
             self.toggleBranch(d.id);
@@ -418,7 +421,7 @@
       //update
       circles
          .attr('r', function(d){
-            return self._blockIsVisible(d) && self.tree[d.id].children.length ? 5 : 0;
+            return self._blockIsVisible(d) && self.tree[d.id].children.length ? 4 : 0;
          })
          .attr('cy', function(d, i){
             var res = y;
@@ -438,7 +441,6 @@
       var
          y = 0,
          self = this,
-         svgHeight = 0,
          captions = d3.select(this._leftCanvas[0]).selectAll('.block-caption')
             .data(this.data);
 
@@ -463,6 +465,42 @@
       d3.select(this._leftCanvas[0])
          .attr('height', y + BLOCK_HEIGHT + V_MARGIN)
          .attr('width', 300);
+
+      this._drawTitleTree();
+   };
+
+   Graph.prototype._drawTitleTree = function(){
+      var
+         y = 0,
+         self = this,
+         captions = d3.select(this._leftCanvas[0]).selectAll('.title-tree')
+            .data(this.data);
+
+      captions
+         .enter()
+         .append('path')
+         .attr('class', 'title-tree');
+
+
+      captions
+         .attr('d', function(d, i){
+            var
+               result = undefined,
+               y1 = y,
+               x1 = 18 + d.level*10,
+               x2 = x1 - 5,
+               y2 = d.parent ? self.data[self.tree[d.parent].index].y + 14: 0;
+
+            y += self._blockIsVisible(d) ? BLOCK_HEIGHT + V_MARGIN : 0;
+
+            y1+=8;
+
+
+            if (self._blockIsVisible(d) && d.level){
+               result = 'M' + x1 + ' ' + y1 + ' H' + x2 + ' V' + y2;
+            }
+            return result;
+         });
    };
 
    /**
