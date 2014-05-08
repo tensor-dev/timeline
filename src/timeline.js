@@ -242,7 +242,7 @@
       var
          y = 0,
          self = this,
-         captions = d3.select(this._canvas[0]).selectAll('.block-tooltip')
+         captions = d3.select(this._canvas[0]).selectAll('.block-duration')
             .data(this.data);
 
       //enter
