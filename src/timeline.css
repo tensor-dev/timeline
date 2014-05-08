@@ -15,18 +15,20 @@
 
 .timeline__leftside{
    display: block;
-   width: 300px;
+   width: 298px;
    position: relative;
    height: 100%;
    overflow-y: auto;
    overflow-x: hidden;
    float: left;
+   border-right: 1px solid #ddd;
 }
 
 .timeline__axe{
    position: absolute;
    display: block;
    bottom: 0;
+   background-color: #fff;
 }
 .timeline__lines{
    position: absolute;
