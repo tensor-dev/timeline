@@ -428,7 +428,21 @@
       blocks
          .enter()
          .append("rect")
-         .attr('class', 'block')
+         .attr('class', function(d, i){
+            var
+               cls = '',
+               css = 'block';
+
+            if (d.parent){
+               cls = self.data[self.tree[d.parent].index].cls;
+            }
+            else if (self.tree[d.id].children && self.tree[d.id].children.length){
+               cls = 'color-' + i%6;
+            }
+            d.cls = cls;
+
+            return css + ' ' + cls;
+         })
          .attr('data-id', function(d){
             return d.id;
          })
@@ -513,7 +527,7 @@
             return res + BLOCK_HEIGHT/2;
          })
          .attr('class', function(d){
-            return 'toggle-branch toggle-branch__' + (d.isClosed ? 'closed' : 'opened')
+            return 'toggle-branch toggle-branch__' + (d.isClosed ? 'closed' : 'opened') + ' ' + d.cls;
          })
    };
 
@@ -585,7 +599,9 @@
       captions
          .enter()
          .append('path')
-         .attr('class', 'title-tree');
+         .attr('class', function(d){
+            return 'title-tree' + ' ' + d.cls;
+         });
 
 
       captions

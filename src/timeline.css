@@ -82,11 +82,10 @@
    stroke-width: 2px;
    stroke: lightblue;
    cursor: pointer;
-   fill: #FFF;
-}
-.timeline__left-canvas .toggle-branch__closed{
    fill: lightblue;
-   stroke: lightblue;
+}
+.timeline__left-canvas .toggle-branch__opened{
+   fill: #FFF !important;
 }
 
 .timeline__lines{
@@ -117,7 +116,7 @@
 .title-tree{
    stroke: lightblue;
    shape-rendering: crispEdges;
-   fill: none;
+   fill: none !important;
 }
 
 .timeline__left-canvas .time{
@@ -126,4 +125,41 @@
    font-size: 10px;
    cursor: pointer;
    opacity: 0.9;
+}
+
+.color-1,
+.timeline__canvas .block.color-1,
+.timeline__left-canvas .toggle-branch.color-1{
+   fill: #FF918E;
+   stroke: #FF918E;
+}
+.color-2,
+.timeline__canvas .block.color-2,
+.timeline__left-canvas .toggle-branch.color-2{
+   fill: #FFCF8E;
+   stroke: #FFCF8E;
+}
+.color-3,
+.timeline__canvas .block.color-3,
+.timeline__left-canvas .toggle-branch.color-3{
+   fill: #FFEC8E;
+   stroke: #FFEC8E;
+}
+.color-4,
+.timeline__canvas .block.color-4,
+.timeline__left-canvas .toggle-branch.color-4{
+   fill: darkseagreen;
+   stroke: darkseagreen;
+}
+.color-5,
+.timeline__canvas .block.color-5,
+.timeline__left-canvas .toggle-branch.color-5{
+   fill: #C9B7FA;
+   stroke: #C9B7FA;
+}
+.color-0,
+.timeline__canvas .block.color-0,
+.timeline__left-canvas .toggle-branch.color-0{
+   fill: #95CFFF;
+   stroke: #95CFFF;
 }
