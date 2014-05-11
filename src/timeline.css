@@ -119,3 +119,11 @@
    shape-rendering: crispEdges;
    fill: none;
 }
+
+.timeline__left-canvas .time{
+   fill: #ccc;
+   font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+   font-size: 10px;
+   cursor: pointer;
+   opacity: 0.9;
+}

@@ -207,19 +207,31 @@
          }
       }
 
+
+      data = data.sort(function(a,b){
+         return a.start - b.start;
+      });
+
       var
          b,
          newData = [],
-         tree = buildTree(data);
+         tree = buildTree(data),
+         sortedTree = [];
 
       for (var i in tree){
-         if (tree.hasOwnProperty(i) && data[tree[i].index].parent == null){
-            b = data[tree[i].index];
-            b.level = 0;
-            newData.push(b);
-            collectChildren(newData, tree[i].children, tree, b.level);
+         if (tree.hasOwnProperty(i)) {
+            sortedTree[tree[i].index] = tree[i];
          }
       }
+
+      sortedTree.forEach(function(elem){
+         if (data[elem.index].parent == null){
+            b = data[elem.index];
+            b.level = 0;
+            newData.push(b);
+            collectChildren(newData, elem.children, tree, b.level);
+         }
+      });
 
       this.data = newData;
       this.tree = buildTree(this.data);
@@ -231,11 +243,46 @@
    Graph.prototype.redraw = function(){
 
       this._drawBlocks();
-
       this._drawCaptions();
+
+      this._drawTime();
       this._drawTitle();
+      this._drawTitleTree();
       this._drawCircles();
 
+   };
+
+   Graph.prototype._drawTime = function(){
+      var
+         prevStart = 0,
+         y = 0,
+         self = this,
+         captions = d3.select(this._leftCanvas[0]).selectAll('.time')
+            .data(this.data);
+
+      captions
+         .enter()
+         .append('text')
+         .attr('class', 'time')
+         .attr('x', function(d, i){
+            return 1;
+         });
+
+      captions
+         .attr('y', function(d, i){
+            var res = y;
+            y += self._blockIsVisible(d) ? BLOCK_HEIGHT + V_MARGIN : 0;
+            return res + 11;
+         })
+         .text(function(d){
+            var
+               showTime = prevStart == 0 || d.start - prevStart > 30000,
+               txt = parseInt(d.start/60000) + 'm' + parseInt((d.start%60000)/1000) + 's';
+
+            prevStart = d.start;
+
+            return self._blockIsVisible(d) && showTime ? txt : '';
+         });
    };
 
    Graph.prototype._drawCaptions = function(){
@@ -449,7 +496,7 @@
             return self.tree[d.id].children && self.tree[d.id].children.length;
          })
          .attr('cx', function(d, i){
-            return 13 + d.level*10;
+            return 40 + d.level*10;
          })
          .on('click', function(d){
             self.toggleBranch(d.id);
@@ -496,7 +543,7 @@
          .append('text')
          .attr('class', 'block-caption')
          .attr('x', function(d, i){
-            return 20 + d.level*10;
+            return 47 + d.level*10;
          })
          .on('mouseover', function(d){
             toggleHover(d.id, true);
@@ -526,8 +573,6 @@
       d3.select(this._leftCanvas[0])
          .attr('height', y + BLOCK_HEIGHT + V_MARGIN)
          .attr('width', 300);
-
-      this._drawTitleTree();
    };
 
    Graph.prototype._drawTitleTree = function(){
@@ -548,13 +593,13 @@
             var
                result = undefined,
                y1 = y,
-               x1 = 18 + d.level*10,
-               x2 = x1 - 5,
+               x1 = 40 + d.level*10,
+               x2 = x1 - 10,
                y2 = d.parent ? self.data[self.tree[d.parent].index].y + 14: 0;
 
             y += self._blockIsVisible(d) ? BLOCK_HEIGHT + V_MARGIN : 0;
 
-            y1+=8;
+            y1+=7;
 
 
             if (self._blockIsVisible(d) && d.level){
