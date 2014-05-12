@@ -51,8 +51,8 @@
          var
             direction = (self.mousePosition.x + self.container.width()) > $(window).width() ? 'left' : 'right',
             offset = {
-               left : self.mousePosition.x - (direction == 'left' ? this.container.width() : 10),
-               top : self.mousePosition.y - self.container.height()
+               left : self.mousePosition.x - (direction == 'left' ? self.container.outerWidth() : 0),
+               top : self.mousePosition.y - self.container.outerHeight() - 10
             };
 
          self.container.show();
