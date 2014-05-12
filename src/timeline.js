@@ -615,14 +615,31 @@
    Graph.prototype.toggleHover = function(id, action){
       var
          elem = this._getBlockElem(id),
-         top = elem.getAttribute('y')+'px';
+         top = elem.getAttribute('y'),
+         count = this._getHoverElementsCount(id),
+         height = count * BLOCK_HEIGHT + (count - 1) * V_MARGIN;
 
       elem.classList[action ? 'add' : 'remove']('hover');
 
       this._rightHover.finish();
-      this._rightHover.animate({'top': top}, 'fast');
+      this._rightHover.animate({'height': height, 'top': top}, 'fast');
       this._leftHover.finish();
-      this._leftHover.animate({'top': top}, 'fast');
+      this._leftHover.animate({'height': height, 'top': top}, 'fast');
+   };
+
+   Graph.prototype._getHoverElementsCount = function(id){
+      var
+         self = this,
+         treeInfo = this.tree[id],
+         isClosed = this.data[treeInfo.index].isClosed,
+         count = 1;
+
+      if (!isClosed && this.tree[id].children){
+         this.tree[id].children.forEach(function(i){
+            count += self._getHoverElementsCount(i);
+         })
+      }
+      return count;
    };
 
    Graph.prototype._drawTitleTree = function(){
