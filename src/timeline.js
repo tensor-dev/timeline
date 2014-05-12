@@ -473,7 +473,7 @@
          })
          .on('click', function(d){
             self.toggleBranch(d.id);
-         });;
+         });
 
       //update
       blocks
@@ -574,7 +574,6 @@
          .on('click', function(d){
             var
                elem = getBlockElem(d.id),
-               hasChildren = self.tree[d.id].children && self.tree[d.id].children.length,
                x = parseInt(elem.getAttribute('x'),10),
                wrapperWidth = self._wrapper.width(),
                scrollLeft = x - wrapperWidth/2,
@@ -583,7 +582,7 @@
             if (needToScroll){
                self._wrapper.animate({'scrollLeft': scrollLeft}, 'slow');
             }
-            else if (hasChildren){
+            else{
                self.toggleBranch(d.id);
             }
          });
@@ -659,15 +658,20 @@
     * @param id
     */
    Graph.prototype.toggleBranch = function(id){
-      var block = this.data[this.tree[id].index];
+      var
+         treeInfo = this.tree[id],
+         hasChildren = treeInfo.children && treeInfo.children.length,
+         block = this.data[treeInfo.index];
 
-      if (block.isClosed){
-         block.isClosed = false;
+      if (hasChildren){
+         if (block.isClosed){
+            block.isClosed = false;
+         }
+         else{
+            this._closeBranch(id);
+         }
+         this.redraw();
       }
-      else{
-         this._closeBranch(id);
-      }
-      this.redraw();
    };
 
    /**
