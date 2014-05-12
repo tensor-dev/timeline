@@ -157,10 +157,12 @@
 
       this._container.html(
         '<div class="timeline__leftside">\
+            <div class="hover-line"></div>\
             <svg class="timeline__left-canvas"></svg>\
          </div>\
          <div class="timeline__wrapper">\
             <svg class="timeline__lines"></svg>\
+            <div class="hover-line"></div>\
             <svg class="timeline__canvas"></svg>\
             <svg class="timeline__axe"></svg>\
          </div>'
@@ -172,6 +174,8 @@
       this._lines = this._container.find('.timeline__lines');
       this._canvas = this._container.find('.timeline__canvas');
       this._axe = this._container.find('.timeline__axe');
+      this._leftHover = this._leftside.find('.hover-line');
+      this._rightHover = this._wrapper.find('.hover-line');
    };
 
    /**
@@ -301,10 +305,12 @@
             return d.start/10 + 2;
          })
          .on('mouseover', function(d){
-            self.showTip(d)
+            self.showTip(d);
+            self.toggleHover(d.id, true);
          })
          .on('mouseout', function(d){
             self.closeTip(d);
+            self.toggleHover(d.id, false);
          })
          .on('click', function(d){
             self.toggleBranch(d.id);
@@ -466,10 +472,12 @@
             return  w < 1 ? 1 : w;
          })
          .on('mouseover', function(d){
-            self.showTip(d)
+            self.showTip(d);
+            self.toggleHover(d.id, true);
          })
          .on('mouseout', function(d){
             self.closeTip(d);
+            self.toggleHover(d.id, false);
          })
          .on('click', function(d){
             self.toggleBranch(d.id);
@@ -495,6 +503,8 @@
       d3.select(this._canvas[0])
          .attr('height', svgHeight + BLOCK_HEIGHT + V_MARGIN)
          .attr('width', svgWidth + self._wrapper.width()/2);
+
+      this._rightHover.width(svgWidth + self._wrapper.width()/2)
    };
 
    /**
@@ -543,20 +553,11 @@
     */
    Graph.prototype._drawTitle = function(){
       var
+         width = 0,
          y = 0,
          self = this,
          captions = d3.select(this._leftCanvas[0]).selectAll('.block-caption')
             .data(this.data);
-
-      function getBlockElem(id){
-         return self._canvas[0].querySelector('[data-id="'+ id +'"]');
-      }
-
-      function toggleHover(id, action){
-         var elem = getBlockElem(id);
-
-         elem.classList[action ? 'add' : 'remove']('hover');
-      }
 
       captions
          .enter()
@@ -566,14 +567,14 @@
             return 47 + d.level*10;
          })
          .on('mouseover', function(d){
-            toggleHover(d.id, true);
+            self.toggleHover(d.id, true);
          })
          .on('mouseout', function(d){
-            toggleHover(d.id, false);
+            self.toggleHover(d.id, false);
          })
          .on('click', function(d){
             var
-               elem = getBlockElem(d.id),
+               elem = self._getBlockElem(d.id),
                x = parseInt(elem.getAttribute('x'),10),
                wrapperWidth = self._wrapper.width(),
                scrollLeft = x - wrapperWidth/2,
@@ -598,10 +599,30 @@
          });
 
 
+      width = this._leftCanvas[0].getBBox().width;
 
       d3.select(this._leftCanvas[0])
          .attr('height', y + BLOCK_HEIGHT + V_MARGIN)
-         .attr('width', this._leftCanvas[0].getBBox().width);
+         .attr('width', width);
+
+      this._leftHover.width(width);
+   };
+
+   Graph.prototype._getBlockElem = function(id){
+      return this._canvas[0].querySelector('[data-id="'+ id +'"]');
+   };
+
+   Graph.prototype.toggleHover = function(id, action){
+      var
+         elem = this._getBlockElem(id),
+         top = elem.getAttribute('y')+'px';
+
+      elem.classList[action ? 'add' : 'remove']('hover');
+
+      this._rightHover.finish();
+      this._rightHover.animate({'top': top}, 'fast');
+      this._leftHover.finish();
+      this._leftHover.animate({'top': top}, 'fast');
    };
 
    Graph.prototype._drawTitleTree = function(){
