@@ -305,6 +305,9 @@
          })
          .on('mouseout', function(d){
             self.closeTip(d);
+         })
+         .on('click', function(d){
+            self.toggleBranch(d.id);
          });
 
       //update
@@ -467,7 +470,10 @@
          })
          .on('mouseout', function(d){
             self.closeTip(d);
-         });
+         })
+         .on('click', function(d){
+            self.toggleBranch(d.id);
+         });;
 
       //update
       blocks
@@ -568,10 +574,18 @@
          .on('click', function(d){
             var
                elem = getBlockElem(d.id),
-               scrollLeft = parseInt(elem.getAttribute('x'),10) - self._wrapper.width()/2 ;
+               hasChildren = self.tree[d.id].children && self.tree[d.id].children.length,
+               x = parseInt(elem.getAttribute('x'),10),
+               wrapperWidth = self._wrapper.width(),
+               scrollLeft = x - wrapperWidth/2,
+               needToScroll = Math.abs(x - self._wrapper.scrollLeft()) > wrapperWidth;
 
-            self._wrapper.animate({'scrollLeft': scrollLeft}, 'slow')
-
+            if (needToScroll){
+               self._wrapper.animate({'scrollLeft': scrollLeft}, 'slow');
+            }
+            else if (hasChildren){
+               self.toggleBranch(d.id);
+            }
          });
 
       captions
