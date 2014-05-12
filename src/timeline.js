@@ -597,9 +597,11 @@
             return self._blockIsVisible(d) ? d.label : '';
          });
 
+
+
       d3.select(this._leftCanvas[0])
          .attr('height', y + BLOCK_HEIGHT + V_MARGIN)
-         .attr('width', 300);
+         .attr('width', this._leftCanvas[0].getBBox().width);
    };
 
    Graph.prototype._drawTitleTree = function(){
