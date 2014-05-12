@@ -494,7 +494,7 @@
 
       d3.select(this._canvas[0])
          .attr('height', svgHeight + BLOCK_HEIGHT + V_MARGIN)
-         .attr('width', svgWidth);
+         .attr('width', svgWidth + self._wrapper.width()/2);
    };
 
    /**
