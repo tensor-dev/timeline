@@ -711,6 +711,7 @@
             this._closeBranch(id);
          }
          this.redraw();
+         this.toggleHover(id, true);
       }
    };
 
