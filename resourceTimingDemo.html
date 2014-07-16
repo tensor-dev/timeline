@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+   <meta charset="UTF-8">
+   <title>timeline-test</title>
+
+   <style>
+      #timeline{
+         margin-top: 50px;
+         height: 600px;
+         border: 1px solid lightblue;
+      }
+   </style>
+
+   <link rel="stylesheet" href="/src/timeline.css"/>
+</head>
+<body>
+
+   <div id="timeline"></div>
+
+
+   <!--script block-->
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+   <script src="/src/d3.js"></script>
+   <script src="/src/timeline.js"></script>
+</body>
+<script>
+    setTimeout(function() {
+        var cnt = 0;
+
+        function mkItem(perf, parent, key1, key2, label) {
+            return {
+                start: perf[key2 ? key1 : key1 + 'Start'],
+                end: perf[key2 || key1 + 'End'],
+                label: key2 && label || key1,
+                parent: parent,
+                id: ++cnt
+            }
+        }
+
+        function mkPagePerf() {
+            var data = performance.timing, i = {};
+
+            Object.keys(data).filter(function(k){
+                return data[k] > 0;
+            }).forEach(function(k){
+                i[k] = data[k] - data.navigationStart;
+            });
+
+            i.name = location + '';
+            i.startTime = 0;
+            i.duration = i.responseEnd;
+
+            return [ i ];
+        }
+
+        var items = mkPagePerf().concat(performance.getEntries()).map(function(perf){
+            var thisItem = ++cnt, mk = mkItem.bind(null, perf, thisItem);
+            return [{
+                start: perf.startTime,
+                end: perf.startTime + perf.duration,
+                label: perf.name,
+                parent: null,
+                id: thisItem
+            },
+             mk('fetchStart', 'domainLookupStart', 'app cache'),
+             mk('domainLookup'),
+             mk('connect'),
+             mk('requestStart', 'responseStart', 'request'),
+             mk('response')];
+        }).reduce(function(memo, item) {
+            return memo.concat(item);
+        }, []).map(function(item){
+            item.duration = item.end - item.start;
+            return item;
+        }).filter(function(item){
+            return item.duration > 0;
+        });
+
+        new TimeLine($('#timeline'), items);
+    }, 100);
+</script>
+</html>
