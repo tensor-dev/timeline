@@ -324,7 +324,7 @@
             return res + 11;
          })
          .text(function(d){
-            return self._blockIsVisible(d) ? d.end- d.start + 'ms' : '';
+            return self._blockIsVisible(d) ? (d.end- d.start).toFixed(2) + 'ms' : '';
          });
    };
 
